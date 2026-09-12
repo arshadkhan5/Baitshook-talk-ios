@@ -9,4 +9,4 @@ matrix:
     wordlists:
       - .pyspelling.wordlist.txt
   sources:
-  - NextcloudTalk/en.lproj/Localizable.strings 
+  - GccTalk/en.lproj/Localizable.strings 

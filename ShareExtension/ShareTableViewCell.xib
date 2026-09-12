@@ -27,7 +27,7 @@
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="zQd-Is-7Kg" customClass="AvatarImageView" customModule="NextcloudTalk" customModuleProvider="target">
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="zQd-Is-7Kg" customClass="AvatarImageView" customModule="GccTalk" customModuleProvider="target">
                         <rect key="frame" x="10" y="10" width="36" height="36"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="36" id="Eos-so-7Gh"/>

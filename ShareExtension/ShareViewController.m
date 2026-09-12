@@ -16,7 +16,7 @@
 #import "PlaceholderView.h"
 #import "ShareTableViewCell.h"
 #import "NCKeyChainController.h"
-#import "NextcloudTalk-Swift.h"
+#import "GccTalk-Swift.h"
 
 @interface ShareViewController () <UISearchControllerDelegate, UISearchResultsUpdating, ShareConfirmationViewControllerDelegate>
 {
@@ -187,15 +187,15 @@
     
     // Rooms placeholder view
     _roomsBackgroundView = [[PlaceholderView alloc] init];
-    [_roomsBackgroundView setImage:[UIImage imageNamed:@"conversations-placeholder"]];
+    [_roomsBackgroundView setImage:[UIImage imageNamed:@"gcc_talk"]];
     [_roomsBackgroundView.placeholderTextView setText:NSLocalizedString(@"You are not part of any conversation", nil)];
     [_roomsBackgroundView.placeholderView setHidden:(_rooms.count > 0)];
     [_roomsBackgroundView.loadingView setHidden:YES];
     self.tableView.backgroundView = _roomsBackgroundView;
     
     _roomSearchBackgroundView = [[PlaceholderView alloc] init];
-    [_roomSearchBackgroundView setImage:[UIImage imageNamed:@"conversations-placeholder"]];
-    [_roomSearchBackgroundView.placeholderTextView setText:NSLocalizedString(@"No results found", nil)];
+    [_roomSearchBackgroundView setImage:[UIImage imageNamed:@"gcc_talk"]];
+    [_roomSearchBackgroundView.placeholderTextView setText:NSLocalizedString(@" Result not found", nil)];
     [_roomSearchBackgroundView.placeholderView setHidden:YES];
     [_roomSearchBackgroundView.loadingView setHidden:YES];
     _resultTableViewController.tableView.backgroundView = _roomSearchBackgroundView;

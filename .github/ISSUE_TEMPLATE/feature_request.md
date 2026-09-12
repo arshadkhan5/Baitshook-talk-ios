@@ -1,6 +1,6 @@
 ---
-name: 🚀 Feature request specifically for Nextcloud Talk iOS
-about: Suggest an idea for Nextcloud Talk iOS
+name: 🚀 Feature request specifically for GCC Talk iOS
+about: Suggest an idea for GCC Talk iOS
 title: ''
 labels: 0. Needs triage, enhancement
 assignees: ''

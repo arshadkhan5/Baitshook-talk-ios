@@ -17,10 +17,10 @@ def main_dependencies
   pod 'MobileVLCKit', '~> 3.5.0'
 end
 
-target "NextcloudTalk" do
+target "GccTalk" do
   main_dependencies
 
-  target 'NextcloudTalkTests' do
+  target 'GccTalkTests' do
     inherit! :search_paths
   end
 end
@@ -37,7 +37,7 @@ target "BroadcastUploadExtension" do
   common_dependencies
 end
 
-target "TalkIntents" do
+target "GccTalkIntents" do
   common_dependencies_ext
 end
 

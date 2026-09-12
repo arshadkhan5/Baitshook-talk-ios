@@ -8,9 +8,9 @@ on:
     paths:
       - '.github/workflows/**'
       - Podfile
-      - NextcloudTalk.xcodeproj/**
-      - NextcloudTalk/**
-      - NextcloudTalkTests/**
+      - GccTalk.xcodeproj/**
+      - GccTalk/**
+      - GccTalkTests/**
       - NotificationServiceExtension/**
       - ShareExtension/**
       - BroadcastUploadExtension/**
@@ -28,9 +28,9 @@ permissions:
   contents: read
 
 env:
-  WORKSPACE: NextcloudTalk.xcworkspace
+  WORKSPACE: GccTalk.xcworkspace
   DESTINATION: platform=iOS Simulator,name=iPhone 16,OS=18.5
-  SCHEME: NextcloudTalk
+  SCHEME: GccTalk
 
 jobs:
   build:
@@ -80,7 +80,7 @@ jobs:
         xcrun simctl list > /dev/null # Required to prevent the next command from sometimes not working
         xcodebuild -downloadPlatform iOS -buildVersion 18.5
 
-    - name: Build NextcloudTalk iOS for testing
+    - name: Build GCC Talk iOS for testing
       run: |
         set -o pipefail && \
         xcodebuild build-for-testing \
@@ -201,7 +201,7 @@ jobs:
         xcrun simctl list > /dev/null # Required to prevent the next command from sometimes not working
         xcodebuild -downloadPlatform iOS -buildVersion 18.5
 
-    - name: Test NextcloudTalk iOS
+    - name: Test GCC Talk iOS
       run: |
         set -o pipefail && \
         xcodebuild test-without-building \

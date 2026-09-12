@@ -1,9 +1,6 @@
 # SPDX-FileCopyrightText: 2021 Nextcloud GmbH and Nextcloud contributors
 # SPDX-License-Identifier: MIT
 contact_links:
-    - name: 🗺️ Feature request for the full Nextcloud Talk suite
+    - name: 🗺️ Upstream Nextcloud Talk (server and other clients)
       url: https://github.com/nextcloud/spreed/issues/new/choose
-      about: Suggest an idea for Nextcloud Talk for all users, client and server
-    - name: ❓ Community Support and Help
-      url: https://help.nextcloud.com/
-      about: Configuration, webserver/proxy or performance issues and other questions
+      about: GCC Talk is built on Nextcloud Talk. Server-side issues belong upstream.

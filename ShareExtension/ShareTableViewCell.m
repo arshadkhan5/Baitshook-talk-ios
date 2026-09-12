@@ -8,7 +8,7 @@
 #import "AFNetworking.h"
 #import "NCAppBranding.h"
 
-#import "NextcloudTalk-Swift.h"
+#import "GccTalk-Swift.h"
 
 NSString *const kShareCellIdentifier = @"ShareCellIdentifier";
 NSString *const kShareTableCellNibName = @"ShareTableViewCell";

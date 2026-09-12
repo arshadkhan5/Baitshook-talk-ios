@@ -332,7 +332,7 @@ import MBProgressHUD
 
         // Configure communication lib
         let userToken = NCKeyChainController.sharedInstance().token(forAccountId: self.account.accountId)
-        let userAgent = "Mozilla/5.0 (iOS) Nextcloud-Talk v\(Bundle.main.infoDictionary?["CFBundleShortVersionString"] ?? "Unknown")"
+        let userAgent = "Mozilla/5.0 (iOS) GCC-Talk v\(Bundle.main.infoDictionary?["CFBundleShortVersionString"] ?? "Unknown")"
 
         NextcloudKit.shared.setup(account: self.account.accountId,
                                   user: self.account.user,

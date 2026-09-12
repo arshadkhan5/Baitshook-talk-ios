@@ -23,7 +23,7 @@ identifier_name:
 excluded:
   - Pods
   - ThirdParty
-  - NextcloudTalk/RLMSupport.swift
+  - GccTalk/RLMSupport.swift
   - DerivedData
 
 reporter: "xcode"

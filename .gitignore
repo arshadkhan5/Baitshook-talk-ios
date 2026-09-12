@@ -2,10 +2,9 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 Pods
 Podfile.lock
-NextcloudTalk.xcodeproj/xcuserdata
-NextcloudTalk.xcodeproj/xcshareddata
-NextcloudTalk.xcworkspace/xcuserdata
-NextcloudTalk.xcworkspace/xcshareddata
+GccTalk.xcodeproj/xcuserdata
+GccTalk.xcodeproj/project.xcworkspace/xcuserdata
+GccTalk.xcworkspace/xcuserdata
 ThirdParty/WebRTC.xcframework
 .DS_Store
 testResult.xcresult

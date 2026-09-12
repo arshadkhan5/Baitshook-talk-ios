@@ -14,7 +14,7 @@
 #import "NCPushNotification.h"
 #import "NCPushNotificationsUtils.h"
 
-#import "NextcloudTalk-Swift.h"
+#import "GccTalk-Swift.h"
 
 #import <SDWebImage/SDWebImage.h>
 

@@ -6,7 +6,7 @@
 #import <MobileCoreServices/MobileCoreServices.h>
 
 #import "ShareItemController.h"
-#import "NextcloudTalk-Swift.h"
+#import "GccTalk-Swift.h"
 
 //TODO: Should the quality be user-selectable?
 CGFloat const kShareItemControllerImageQuality = 0.7f;
