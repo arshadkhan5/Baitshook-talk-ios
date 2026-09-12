@@ -1,0 +1,103 @@
+# SPDX-FileCopyrightText: 2023 Nextcloud GmbH and Nextcloud contributors
+# SPDX-License-Identifier: MIT
+
+# Builds a Release, device (arm64) build of the app with all extensions and packages
+# it as an UNSIGNED .ipa. It cannot be installed as-is: sign it with Xcode, Sideloadly,
+# AltStore or a similar tool using your own Apple developer account.
+
+name: Unsigned IPA
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ipa-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  WORKSPACE: GccTalk.xcworkspace
+  SCHEME: GccTalk
+
+jobs:
+  ipa:
+    name: Build unsigned IPA
+    runs-on: macos-15
+    timeout-minutes: 60
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+      with:
+        persist-credentials: false
+        submodules: true
+
+    - name: Cache Pods
+      uses: actions/cache@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
+      with:
+        path: Pods
+        key: ${{ runner.os }}-pods-${{ hashFiles('Podfile') }}
+        restore-keys: |
+          ${{ runner.os }}-pods-
+
+    - name: Setup CocoaPods
+      uses: maxim-lobanov/setup-cocoapods@8e97e1e98e6ccf42564fdf5622c8feec74199377 # v1.4.0
+      with:
+        version: latest
+
+    - name: pod install
+      run: pod install
+
+    - name: Setup Xcode
+      uses: maxim-lobanov/setup-xcode@60606e260d2fc5762a71e64e74b2174e8ea3c8bd # v1.6.0
+      with:
+        xcode-version: '26.0.1'
+
+    - name: Build for device (Release, no signing)
+      run: |
+        set -o pipefail && \
+        xcodebuild build \
+          -workspace "$WORKSPACE" \
+          -scheme "$SCHEME" \
+          -configuration Release \
+          -sdk iphoneos \
+          -destination "generic/platform=iOS" \
+          -derivedDataPath DerivedData \
+          CODE_SIGNING_ALLOWED=NO \
+          CODE_SIGNING_REQUIRED=NO \
+          CODE_SIGN_IDENTITY="" \
+          DEVELOPMENT_TEAM="" \
+          PROVISIONING_PROFILE_SPECIFIER="" \
+          | xcbeautify --quieter
+
+    - name: Package .ipa
+      run: |
+        cd DerivedData/Build/Products/Release-iphoneos
+        ls -la
+        rm -rf Payload && mkdir Payload
+        cp -R GccTalk.app Payload/
+        VERSION=$(/usr/libexec/PlistBuddy -c 'Print CFBundleShortVersionString' GccTalk.app/Info.plist)
+        BUILD=$(/usr/libexec/PlistBuddy -c 'Print CFBundleVersion' GccTalk.app/Info.plist)
+        zip -qry "GccTalk-${VERSION}-${BUILD}-unsigned.ipa" Payload
+        ls -la *.ipa
+        echo "IPA=DerivedData/Build/Products/Release-iphoneos/GccTalk-${VERSION}-${BUILD}-unsigned.ipa" >> "$GITHUB_ENV"
+
+    - name: Upload IPA
+      uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+      with:
+        name: GccTalk-unsigned-ipa
+        path: ${{ env.IPA }}
+        retention-days: 30
+        if-no-files-found: error
+
+    - name: Upload build log on failure
+      if: failure()
+      uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+      with:
+        name: ipa-xcodebuild-logs
+        path: DerivedData/Logs/Build
+        retention-days: 7
