@@ -50,6 +50,8 @@ class Config:
         self.app_name = env.get("APP_NAME", "GCC Talk")
         self.new_notification_text = env.get("NEW_NOTIFICATION_TEXT", "You have a new notification")
         self.apns_key_file = env.get("APNS_KEY_FILE", "")
+        # Alternative to APNS_KEY_FILE for platforms that only offer environment secrets (Fly.io, Render, ...).
+        self.apns_key_pem = env.get("APNS_KEY_PEM", "")
         self.apns_key_id = env.get("APNS_KEY_ID", "")
         self.apns_team_id = env.get("APNS_TEAM_ID", "")
         self.apns_environment = env.get("APNS_ENVIRONMENT", "production")
@@ -57,14 +59,22 @@ class Config:
 
     def validate(self) -> None:
         missing = [name for name, value in (
-            ("APNS_KEY_FILE", self.apns_key_file),
             ("APNS_KEY_ID", self.apns_key_id),
             ("APNS_TEAM_ID", self.apns_team_id),
         ) if not value]
+        if not self.apns_key_pem and not self.apns_key_file:
+            missing.append("APNS_KEY_FILE or APNS_KEY_PEM")
         if missing:
             raise SystemExit(f"Missing required environment variables: {', '.join(missing)}")
-        if not os.path.exists(self.apns_key_file):
+        if not self.apns_key_pem and not os.path.exists(self.apns_key_file):
             raise SystemExit(f"APNS_KEY_FILE not found: {self.apns_key_file}")
+
+    def load_apns_key(self) -> bytes:
+        if self.apns_key_pem:
+            # Secrets UIs often flatten newlines; the PEM parser needs them back.
+            return self.apns_key_pem.replace("\\n", "\n").strip().encode("utf-8") + b"\n"
+        with open(self.apns_key_file, "rb") as fh:
+            return fh.read()
 
 
 class ProxyService:
@@ -314,9 +324,7 @@ def main() -> None:
     config = Config()
     logging.basicConfig(level=config.log_level, format="%(asctime)s %(levelname)s %(name)s: %(message)s", stream=sys.stdout)
     config.validate()
-    with open(config.apns_key_file, "rb") as fh:
-        key_pem = fh.read()
-    apns = ApnsClient(key_pem, config.apns_key_id, config.apns_team_id, config.apns_environment)
+    apns = ApnsClient(config.load_apns_key(), config.apns_key_id, config.apns_team_id, config.apns_environment)
     store = DeviceStore(os.path.join(config.data_dir, "devices.json"))
     service = ProxyService(store, apns, config)
     server = make_server(service, config.bind, config.port)

@@ -82,6 +82,32 @@ machine behind it. No new server needed.
    `certbot` is already installed if Nextcloud's certificate came from Let's
    Encrypt; otherwise `sudo apt install certbot python3-certbot-apache`.
 
+### No server access at all: Fly.io (hosted, a few dollars a month)
+
+The proxy is independent of the Nextcloud server, so it can run anywhere with
+a public HTTPS address. Fly.io gives a container its own `https://<app>.fly.dev`
+hostname, no DNS or certificates to manage. Needs the `fly` CLI on your Mac
+(`brew install flyctl`) and a Fly account with a payment method.
+
+```bash
+cd push-proxy
+fly auth login
+fly launch --copy-config --no-deploy          # accept the app name or pick another; choose a region
+fly volumes create pushdata --size 1          # same region as the app
+fly secrets set APNS_KEY_ID=AB12CD34EF APNS_TEAM_ID=9Z63VM6NS2 APNS_KEY_PEM="$(cat ~/Downloads/AuthKey_AB12CD34EF.p8)"
+fly deploy
+fly status                                    # note the hostname, e.g. gcc-talk-push.fly.dev
+curl https://gcc-talk-push.fly.dev/health
+```
+
+The key is passed as a secret (`APNS_KEY_PEM`) instead of a file. Then set
+`pushNotificationServer` in `GccTalk/Settings/NCAppBranding.m` to that
+`https://….fly.dev` hostname and rebuild the app. `fly.toml` keeps one machine
+always running so pushes are never delayed by a cold start.
+
+For sandbox testing from Xcode: `fly secrets set APNS_ENVIRONMENT=sandbox`,
+and back to `production` before TestFlight.
+
 ### Alternative: a separate machine with the bundled Caddy
 
 Use `docker compose up -d --build` (without the override) on any Linux box

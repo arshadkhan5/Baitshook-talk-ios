@@ -276,6 +276,22 @@ class ProxyTestCase(unittest.TestCase):
             self.assertEqual(json.loads(resp.read())["status"], "ok")
 
 
+class ConfigTestCase(unittest.TestCase):
+    def test_key_from_env_var_with_flattened_newlines(self):
+        key = ec.generate_private_key(ec.SECP256R1())
+        pem = key.private_bytes(serialization.Encoding.PEM, serialization.PrivateFormat.PKCS8, serialization.NoEncryption()).decode()
+        flattened = pem.strip().replace("\n", "\\n")  # what a secrets UI tends to store
+        cfg = proxy_app.Config(env={"APNS_KEY_PEM": flattened, "APNS_KEY_ID": "K", "APNS_TEAM_ID": "T"})
+        cfg.validate()
+        signer = ApnsJwtSigner(cfg.load_apns_key(), "K", "T")
+        self.assertTrue(signer.token().count(".") == 2)
+
+    def test_missing_key_is_reported(self):
+        cfg = proxy_app.Config(env={"APNS_KEY_ID": "K", "APNS_TEAM_ID": "T"})
+        with self.assertRaises(SystemExit):
+            cfg.validate()
+
+
 class JwtSignerTestCase(unittest.TestCase):
     def test_token_verifies_with_public_key(self):
         key = ec.generate_private_key(ec.SECP256R1())
