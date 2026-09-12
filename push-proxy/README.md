@@ -49,12 +49,43 @@ docker compose up -d --build
 curl https://push.baitshook.com/health
 ```
 
-**Running it on the same machine as `nc.baitshook.com`.** If that server
-already has nginx, Apache or another proxy on ports 80/443, do not start the
-`caddy` service (`docker compose up -d --build push-proxy`), publish port 8080
-on localhost instead, and add a `push.baitshook.com` virtual host to your
-existing web server that proxies to `http://127.0.0.1:8080` with a TLS
-certificate. Any of the usual Let's Encrypt setups works.
+### Recommended: on the Nextcloud server itself (Apache on Ubuntu)
+
+`nc.baitshook.com` already runs Apache, so the proxy can live on the same
+machine behind it. No new server needed.
+
+1. Add a DNS **A record** `push.baitshook.com` → the server's IP
+   (`161.97.129.123`), at the place you manage `baitshook.com` DNS.
+2. On the server, install Docker if it is not there yet:
+   `curl -fsSL https://get.docker.com | sudo sh`
+3. Copy this `push-proxy` folder to the server (for example with `scp` or
+   `git clone` of the repo), put `AuthKey.p8` and `.env` in it as described
+   above, then start only the proxy, bound to localhost:
+
+   ```bash
+   cd push-proxy
+   docker compose -f docker-compose.yml -f docker-compose.apache.yml up -d --build push-proxy
+   curl http://127.0.0.1:8080/health
+   ```
+
+4. Add the Apache site and get a certificate:
+
+   ```bash
+   sudo cp apache/push.baitshook.com.conf /etc/apache2/sites-available/
+   sudo a2enmod proxy proxy_http ssl headers
+   sudo a2ensite push.baitshook.com
+   sudo systemctl reload apache2
+   sudo certbot --apache -d push.baitshook.com
+   curl https://push.baitshook.com/health
+   ```
+
+   `certbot` is already installed if Nextcloud's certificate came from Let's
+   Encrypt; otherwise `sudo apt install certbot python3-certbot-apache`.
+
+### Alternative: a separate machine with the bundled Caddy
+
+Use `docker compose up -d --build` (without the override) on any Linux box
+where ports 80 and 443 are free. Caddy obtains the certificate on its own.
 
 `data/devices.json` holds the registrations. Back it up if you care about not
 forcing every user to re-open the app after a reinstall.

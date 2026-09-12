@@ -1,0 +1,9 @@
+# Override for running the proxy behind an existing Apache/nginx on the same host.
+# Skips the bundled Caddy and exposes the proxy on localhost only.
+#
+#   docker compose -f docker-compose.yml -f docker-compose.apache.yml up -d --build push-proxy
+#
+services:
+  push-proxy:
+    ports:
+      - "127.0.0.1:8080:8080"
