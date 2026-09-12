@@ -32,7 +32,13 @@
     // Decrypt the message
     unsigned char *decrypted = (unsigned char *) malloc(4096);
     
-    int decrypted_length = RSA_private_decrypt((int)[decodedData length], [decodedData bytes], decrypted, rsa, RSA_PKCS1_PADDING);
+    // Nextcloud 35+ encrypts push subjects with OAEP padding, older servers use PKCS1.
+    // Try OAEP first and fall back to legacy PKCS1 (same behaviour as upstream Talk iOS).
+    int decrypted_length = RSA_private_decrypt((int)[decodedData length], [decodedData bytes], decrypted, rsa, RSA_PKCS1_OAEP_PADDING);
+    if (decrypted_length == -1) {
+        ERR_clear_error();
+        decrypted_length = RSA_private_decrypt((int)[decodedData length], [decodedData bytes], decrypted, rsa, RSA_PKCS1_PADDING);
+    }
     if(decrypted_length == -1) {
         char buffer[500];
         ERR_error_string(ERR_get_error(), buffer);

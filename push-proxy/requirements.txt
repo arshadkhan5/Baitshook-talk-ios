@@ -1,0 +1,2 @@
+cryptography>=42
+httpx[http2]>=0.27

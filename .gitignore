@@ -11,3 +11,9 @@ testResult.xcresult
 dictionary.dic
 DerivedData
 build
+
+# push proxy secrets and runtime data
+push-proxy/.env
+push-proxy/data/
+push-proxy/*.p8
+__pycache__/

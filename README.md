@@ -60,9 +60,10 @@ The app registers the `gcctalk://` URL scheme (see `GccTalk/Info.plist` and `App
 ## Push notifications
 
 Talk push notifications are relayed through a push proxy. The upstream proxy at
-`push-notifications.nextcloud.com` only serves apps signed by Nextcloud GmbH, so a rebranded app must
-run its own [push proxy](https://github.com/nextcloud/talk-ios/blob/main/docs/notifications.md) and point
-`pushNotificationServer` in `NCAppBranding.m` at it. See [docs/notifications.md](docs/notifications.md).
+`push-notifications.nextcloud.com` only serves apps signed by Nextcloud GmbH, so GCC Talk runs its own.
+The proxy lives in [push-proxy/](push-proxy/README.md) together with deployment instructions;
+`pushNotificationServer` in `NCAppBranding.m` points at `https://push.baitshook.com`.
+For troubleshooting on the device side see [docs/notifications.md](docs/notifications.md).
 
 ## WebRTC library
 

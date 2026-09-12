@@ -1,0 +1,3 @@
+{$PUSH_PROXY_DOMAIN} {
+	reverse_proxy push-proxy:8080
+}

@@ -1,0 +1,31 @@
+services:
+  push-proxy:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - ./data:/data
+      - ./AuthKey.p8:/keys/AuthKey.p8:ro
+    expose:
+      - "8080"
+
+  # Terminates TLS with an automatic Let's Encrypt certificate and forwards to the proxy.
+  # Nextcloud refuses to use a push proxy that is not served over https.
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      - PUSH_PROXY_DOMAIN=${PUSH_PROXY_DOMAIN}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - push-proxy
+
+volumes:
+  caddy_data:
+  caddy_config:
