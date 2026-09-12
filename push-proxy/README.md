@@ -49,6 +49,13 @@ docker compose up -d --build
 curl https://push.baitshook.com/health
 ```
 
+**Running it on the same machine as `nc.baitshook.com`.** If that server
+already has nginx, Apache or another proxy on ports 80/443, do not start the
+`caddy` service (`docker compose up -d --build push-proxy`), publish port 8080
+on localhost instead, and add a `push.baitshook.com` virtual host to your
+existing web server that proxies to `http://127.0.0.1:8080` with a TLS
+certificate. Any of the usual Let's Encrypt setups works.
+
 `data/devices.json` holds the registrations. Back it up if you care about not
 forcing every user to re-open the app after a reinstall.
 

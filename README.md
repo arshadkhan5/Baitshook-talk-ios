@@ -46,6 +46,10 @@ All targets share the app group `group.com.gcc.Talk`. The main app additionally 
 
 ## Branding
 
+The app is preconfigured for the GCC server: `forceDomain` is on and `domain` is
+`https://nc.baitshook.com`, so users go straight to that server's login page instead of
+typing a server address. Set `forceDomain` to `NO` to get the generic server prompt back.
+
 Everything brand-specific lives in `GccTalk/Settings/NCAppBranding.m`:
 
 - `talkAppName`, `filesAppName`, `copyright`

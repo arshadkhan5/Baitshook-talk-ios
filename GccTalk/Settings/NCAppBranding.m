@@ -26,11 +26,11 @@ NSString * const groupIdentifier = @"group.com.gcc.Talk";
 NSString * const appsGroupIdentifier = @"group.com.gcc.apps";
 NSString * const pushNotificationServer = @"https://push.baitshook.com";
 NSString * const privacyURL = @"https://www.baitshook.com/privacy";
-BOOL const isBrandedApp = NO;
+BOOL const isBrandedApp = YES;
 BOOL const multiAccountEnabled = YES;
 BOOL const useAppsGroup = YES;
-BOOL const forceDomain = NO;
-NSString * const domain = nil;
+BOOL const forceDomain = YES;
+NSString * const domain = @"https://nc.baitshook.com";
 NSString * const appAlternateVersion = @"";
 
 + (NSString *)getAppVersionString
